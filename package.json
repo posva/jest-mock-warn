@@ -1,6 +1,6 @@
 {
   "name": "jest-mock-warn",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Assert console.warn calls",
   "main": "src/index.js",
   "types": "src/index.d.ts",
