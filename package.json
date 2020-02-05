@@ -1,0 +1,34 @@
+{
+  "name": "jest-mock-warn",
+  "version": "0.0.0",
+  "description": "Assert console.warn calls",
+  "main": "src/index.js",
+  "types": "src/index.d.ts",
+  "author": {
+    "name": "Eduardo San Martin Morote",
+    "email": "posva13@gmail.com"
+  },
+  "scripts": {
+    "unit": "jest",
+    "dev": "npm run unit -- --watchAll",
+    "test": "npm run lint && npm run unit"
+  },
+  "files": [
+    "src",
+    "LICENSE",
+    "README.md"
+  ],
+  "keywords": [],
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^3.7.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/posva/jest-mock-warn.git"
+  },
+  "bugs": {
+    "url": "https://github.com/posva/jest-mock-warn/issues"
+  },
+  "homepage": "https://github.com/posva/jest-mock-warn#readme"
+}
