@@ -52,7 +52,7 @@ exports.mockWarn = function mockWarn() {
      * @param {string} received
      * @param {number} n
      */
-    toHaveBeenWarnedTimes(received) {
+    toHaveBeenWarnedTimes(received, n) {
       asserted.add(received)
       let found = 0
       warn.mock.calls.forEach(args => {
