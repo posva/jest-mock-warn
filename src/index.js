@@ -2,12 +2,14 @@ exports.mockWarn = function mockWarn() {
   expect.extend({
     /**
      *
-     * @param {string} received
+     * @param {string | RegExp} received
      */
     toHaveBeenWarned(received) {
-      asserted.add(received)
-      const passed = warn.mock.calls.some(
-        args => args[0].indexOf(received) > -1
+      asserted.set(received.toString(), received)
+      const passed = warn.mock.calls.some(args =>
+        typeof received === 'string'
+          ? args[0].indexOf(received) > -1
+          : received.test(args[0])
       )
       if (passed) {
         return {
@@ -26,12 +28,15 @@ exports.mockWarn = function mockWarn() {
 
     /**
      *
-     * @param {string} received
+     * @param {string | RegExp} received
      */
     toHaveBeenWarnedLast(received) {
-      asserted.add(received)
+      asserted.set(received.toString(), received)
+      const lastCall = warn.mock.calls[warn.mock.calls.length - 1][0]
       const passed =
-        warn.mock.calls[warn.mock.calls.length - 1][0].indexOf(received) > -1
+        typeof received === 'string'
+          ? lastCall.indexOf(received) > -1
+          : received.test(lastCall)
       if (passed) {
         return {
           pass: true,
@@ -49,14 +54,18 @@ exports.mockWarn = function mockWarn() {
 
     /**
      *
-     * @param {string} received
+     * @param {string | RegExp} received
      * @param {number} n
      */
     toHaveBeenWarnedTimes(received, n) {
-      asserted.add(received)
+      asserted.set(received.toString(), received)
       let found = 0
       warn.mock.calls.forEach(args => {
-        if (args[0].indexOf(received) > -1) {
+        const isFound =
+          typeof received === 'string'
+            ? args[0].indexOf(received) > -1
+            : received.test(args[0])
+        if (isFound) {
           found++
         }
       })
@@ -79,8 +88,8 @@ exports.mockWarn = function mockWarn() {
 
   /** @type {import('jest').SpyInstance} */
   let warn
-  /** @type {Set<string>} */
-  const asserted = new Set()
+  /** @type {Map<string, string | RegExp>} */
+  const asserted = new Map()
 
   beforeEach(() => {
     asserted.clear()
@@ -93,8 +102,10 @@ exports.mockWarn = function mockWarn() {
     const nonAssertedWarnings = warn.mock.calls
       .map(args => args[0])
       .filter(received => {
-        return !assertedArray.some(assertedMsg => {
-          return received.indexOf(assertedMsg) > -1
+        return !assertedArray.some(([key, assertedMsg]) => {
+          return typeof assertedMsg === 'string'
+            ? received.indexOf(assertedMsg) > -1
+            : assertedMsg.test(received)
         })
       })
     warn.mockRestore()
